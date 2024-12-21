@@ -32,9 +32,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -55,9 +57,11 @@ import com.example.dailynews.utils.DeleteAlertDialog
 import com.example.dailynews.viewmodels.ArticleViewModel
 import com.example.dailynews.viewmodels.HomeViewmodel
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -102,9 +106,13 @@ class MainActivity : ComponentActivity() {
                                 }
                             },
                             articleViewModel = articleViewmodel,
-                            navController=navController
+                            navController=navController,
+                            currentUser=currentUser
                         )
-                    }
+
+                    },
+
+
                 ) {
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
@@ -168,13 +176,24 @@ class MainActivity : ComponentActivity() {
 fun SideDrawerContent(
     onCloseDrawer: () -> Unit,
     articleViewModel: ArticleViewModel = hiltViewModel(),
-    navController: NavController
+    navController: NavController,
+    currentUser:FirebaseUser?=Firebase.auth.currentUser
 ) {
+
     val favoriteArticles = articleViewModel.articles.collectAsState()
     val showDeleteDialog = remember { mutableStateOf(false) }
     val showDeleteDialog2 = remember { mutableStateOf(false) }
+    val email = currentUser // Get the email
+    val name = currentUser?.email?.split("@")?.firstOrNull()
+        ?.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
+        ?: "Unknown User"
+
 
     ModalDrawerSheet {
+    Text(text = "Welcome $name",
+        modifier = Modifier.padding(8.dp).align(Alignment.CenterHorizontally),
+        fontSize = 24.sp
+        )
         // Drawer content
       Row (modifier = Modifier.fillMaxWidth(),
           horizontalArrangement = Arrangement.SpaceBetween
