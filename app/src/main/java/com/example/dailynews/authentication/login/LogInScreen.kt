@@ -30,6 +30,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.dailynews.Screen
 import com.example.dailynews.utils.UiState
 
 @Composable
@@ -95,7 +96,7 @@ fun LogInScreen(
 
                     }
                     is UiState.Success -> {
-                       navController.navigate("home")
+                       navController.navigate(Screen.Home.route)
                         Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -106,7 +107,7 @@ fun LogInScreen(
         }
 
         TextButton(onClick = {
-            navController.navigate("signup")
+            navController.navigate(Screen.SignUp.route)
         }) {
             Text(text = "New User? Create Account")
         }

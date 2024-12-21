@@ -136,11 +136,11 @@ class MainActivity : ComponentActivity() {
                     ) { innerPadding ->
                         NavHost(
                             navController = navController,
-                            startDestination = if (currentUser!=null) "home" else "login",
+                            startDestination = if (currentUser!=null) Screen.Home.route else Screen.Login.route,
                             modifier = Modifier.padding(innerPadding)
                         ) {
                             // Home Screen Route
-                            composable(route = "home") {
+                            composable(route = Screen.Home.route) {
                                 HomeScreen(
                                     viewModel = viewModel,
                                     navController = navController
@@ -148,26 +148,26 @@ class MainActivity : ComponentActivity() {
                             }
 
                             // Detail Screen Route
-                            composable(route = "detail_screen") {
+                            composable(route = Screen.DetailScreen.route) {
                                 DetailScreen(
                                     navController = navController,
                                     homeViewmodel = viewModel,
                                     articleViewmodel = articleViewmodel
                                 )
                             }
-                            composable(route = "detail_screen2") {
+                            composable(route = Screen.DetailScreen2.route) {
                                 DetailScreen2(
                                     navController = navController,
                                     articleViewmodel = articleViewmodel
                                 )
                             }
-                            composable(route="login") {
+                            composable(route=Screen.Login.route) {
                                 LogInScreen(
                                     viewModel = logInViewModel,
                                     navController = navController
                                 )
                             }
-                            composable(route="signup") {
+                            composable(route=Screen.SignUp.route) {
                                 SignUpScreen(
                                     viewModel = signUpViewmodel,
                                     navController = navController
@@ -272,3 +272,10 @@ fun SideDrawerContent(
     }
 }
 
+sealed class Screen(val route: String) {
+    data object Home : Screen("home")
+    data object DetailScreen : Screen("detail_screen")
+    data object DetailScreen2 : Screen("detail_screen2")
+    data object Login : Screen("login")
+    data object SignUp : Screen("signup")
+}
