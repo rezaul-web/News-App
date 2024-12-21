@@ -2,6 +2,7 @@ package com.example.dailynews.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.dailynews.model.Article
 import com.example.dailynews.model.NewsResponse
 import com.example.dailynews.repository.NewsRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,6 +23,12 @@ class HomeViewmodel @Inject constructor(
     val everythingFromAndSorted: StateFlow<NewsResponse?> = _everythingFromAndSorted
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery
+
+  private  val _articleClicked=MutableStateFlow<Article?>(null)
+    val articleClicked=_articleClicked
+    fun updateArticleClicked(article: Article) {
+        _articleClicked.value=article
+    }
 
     // Method to update the search query
     fun updateSearchQuery(query: String) {

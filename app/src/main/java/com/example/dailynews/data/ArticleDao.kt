@@ -5,9 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.dailynews.model.Article
-import com.example.dailynews.model.NewsResponse
-import com.example.dailynews.repository.NewsRepo
-import javax.inject.Inject
+
 
 @Dao
 interface ArticleDao {

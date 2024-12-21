@@ -30,7 +30,7 @@ fun ArticleScreen(viewModel: ArticleViewModel = hiltViewModel(),navController: N
 
         LazyColumn {
            items(articles) {
-               TitleCard(modifier = Modifier, navController = navController, article = it)
+               TitleCard(modifier = Modifier, navController = navController, article = it, onClick = {})
            }
         }
     }
