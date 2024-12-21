@@ -14,6 +14,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,7 +43,7 @@ fun DetailScreen(
 ) {
     val article by homeViewmodel.articleClicked.collectAsState()
     val context = LocalContext.current
-
+    val saved= remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
             DetailScreenTopBar(
@@ -49,7 +51,17 @@ fun DetailScreen(
                 onSaveClick = {
                     article?.let { articleViewmodel.addArticle(it.toEntity()) }
                     Toast.makeText(context, "Article Saved", Toast.LENGTH_SHORT).show()
-                }
+                    saved.value=true
+
+                },
+                buttonTint = {
+                    if (saved.value){
+                        Color.Gray
+                    }else{
+                        Color.Red
+                    }
+                },
+                enabled = !saved.value
             )
         }
     ) { paddingValues ->
@@ -72,7 +84,9 @@ fun DetailScreen(
 @Composable
 fun DetailScreenTopBar(
     onBackClick: () -> Unit,
-    onSaveClick: () -> Unit
+    onSaveClick: () -> Unit,
+    buttonTint :()->Color={Color.Red},
+    enabled:Boolean=true
 ) {
     Row(
         modifier = Modifier
@@ -85,7 +99,8 @@ fun DetailScreenTopBar(
         // Back button
         IconButton(
             onClick = onBackClick,
-            modifier = Modifier.padding(start = 8.dp) // Add padding for alignment
+            modifier = Modifier.padding(start = 8.dp) ,
+            enabled = true// Add padding for alignment
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -106,12 +121,14 @@ fun DetailScreenTopBar(
         // Save button
         IconButton(
             onClick = onSaveClick,
-            modifier = Modifier.padding(end = 8.dp) // Add padding for alignment
+            modifier = Modifier.padding(end = 8.dp),
+            enabled = enabled
+        // Add padding for alignment
         ) {
             Icon(
                 imageVector = Icons.Default.Favorite,
                 contentDescription = "Save Article",
-                tint = Color.Red
+                tint =buttonTint()
             )
         }
     }
