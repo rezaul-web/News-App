@@ -1,4 +1,4 @@
-package com.example.dailynews.screens
+package com.example.dailynews.data
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,7 +22,8 @@ import com.example.dailynews.model.Article
 fun TitleCard(
     modifier: Modifier = Modifier,
     article: Article,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onLongClick: () -> Unit={}
 ) {
     Card(
         onClick = {

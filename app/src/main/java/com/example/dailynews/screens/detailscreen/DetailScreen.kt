@@ -23,17 +23,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.dailynews.model.Article
+import com.example.dailynews.model.toEntity
 import com.example.dailynews.utils.formatDate
+import com.example.dailynews.viewmodels.ArticleViewModel
 import com.example.dailynews.viewmodels.HomeViewmodel
 
 @Composable
 fun DetailScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    homeViewmodel: HomeViewmodel
+    homeViewmodel: HomeViewmodel,
+    articleViewmodel: ArticleViewModel= hiltViewModel()
 ) {
     val article by homeViewmodel.articleClicked.collectAsState()
     val context = LocalContext.current
@@ -43,6 +47,7 @@ fun DetailScreen(
             DetailScreenTopBar(
                 onBackClick = { navController.navigateUp() },
                 onSaveClick = {
+                    article?.let { articleViewmodel.addArticle(it.toEntity()) }
                     Toast.makeText(context, "Article Saved", Toast.LENGTH_SHORT).show()
                 }
             )

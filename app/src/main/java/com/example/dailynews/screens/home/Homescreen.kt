@@ -1,4 +1,4 @@
-package com.example.dailynews.screens
+package com.example.dailynews.screens.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,9 +15,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -28,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.dailynews.screens.TitleCard
 import com.example.dailynews.viewmodels.HomeViewmodel
 
 @Composable
@@ -97,7 +96,6 @@ fun HomeScreen(
                             TitleCard(
                                 modifier = Modifier.padding(4.dp),
                                 article = article,
-                                navController = navController,
                                 onClick = {
                                     viewModel.updateArticleClicked(article)
                                     navController.navigate("detail_screen")

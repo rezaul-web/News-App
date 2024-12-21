@@ -20,9 +20,7 @@ data class Article(
     val publishedAt: String,
     val content: String? // Nullable
 )
-fun parseArticle(json: String): Article {
-    return Json.decodeFromString(json)
-}
+
 
 
 
