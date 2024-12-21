@@ -3,6 +3,7 @@ package com.example.dailynews.screens.detailscreen
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -43,18 +44,18 @@ fun DetailScreen(
                 onBackClick = { navController.navigateUp() },
                 onSaveClick = {
                     Toast.makeText(context, "Article Saved", Toast.LENGTH_SHORT).show()
-
                 }
             )
         }
     ) { paddingValues ->
+        // Add padding to the content to prevent overlap with the top bar
         article?.let { article ->
             DetailContent(
                 article = article,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(horizontal = 16.dp)
+                    .padding(paddingValues) // Use padding from Scaffold to avoid overlap
+                    .padding(horizontal = 16.dp) // Add additional horizontal padding if needed
             ) { url ->
                 openArticleLink(context, url)
             }
@@ -68,37 +69,47 @@ fun DetailScreenTopBar(
     onBackClick: () -> Unit,
     onSaveClick: () -> Unit
 ) {
-    TopAppBar(
-        title = {
-            Text(
-                text = "Article Details",
-                color = Color.Black // Title color
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(72.dp) // Custom height for the top bar
+            .background(Color.Cyan), // Set the background color
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        // Back button
+        IconButton(
+            onClick = onBackClick,
+            modifier = Modifier.padding(start = 8.dp) // Add padding for alignment
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Go Back",
+                tint = Color.Black
             )
-        },
-        navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Go Back",
-                    tint = Color.Black
-                )
-            }
-        },
-        actions = {
-            IconButton(onClick = onSaveClick) {
-                Icon(
-                    imageVector = Icons.Default.Favorite,
-                    contentDescription = "Save Article",
-                    tint = Color.Red
-                )
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Cyan,
-            titleContentColor = Color.Black,
-            actionIconContentColor = Color.Black
+        }
+
+        // Title
+        Text(
+            text = "Article Details",
+            color = Color.Black,
+            style = MaterialTheme.typography.titleLarge, // Adjust the typography style
+            modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
+            maxLines = 1
         )
-    )
+
+        // Save button
+        IconButton(
+            onClick = onSaveClick,
+            modifier = Modifier.padding(end = 8.dp) // Add padding for alignment
+        ) {
+            Icon(
+                imageVector = Icons.Default.Favorite,
+                contentDescription = "Save Article",
+                tint = Color.Red
+            )
+        }
+    }
 }
 
 

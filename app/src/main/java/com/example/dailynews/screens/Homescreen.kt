@@ -1,24 +1,35 @@
 package com.example.dailynews.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.dailynews.viewmodels.HomeViewmodel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewmodel = hiltViewModel(),
@@ -29,76 +40,73 @@ fun HomeScreen(
     val isLoading by viewModel.isLoading.collectAsState()
     val currentSortMethod by viewModel.sortBy.collectAsState()
     val articles = everythingFromAndSorted?.articles ?: emptyList()
-
-
     val searchQuery by viewModel.searchQuery.collectAsState()
-    // val searchQuery = remember { mutableStateOf("") }
 
-    Scaffold(
-        topBar = {
-            HomeScreenTopBar(viewModel, currentSortMethod)
-        },
-        content = { innerPadding ->
-            Column(
-                modifier = modifier
-                    .padding(innerPadding)
-                    .background(Color(0xFFF5F5F5)),
-                verticalArrangement = Arrangement.SpaceEvenly
+    Box(
+        modifier = modifier
+            .background(Color(0xFFF5F5F5))
+            .fillMaxSize()
+    ) {
+        if (isLoading) {
+            // Center the loading indicator
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                if (isLoading) {
-                    Text("Loading...", fontSize = 16.sp, modifier = Modifier.padding(16.dp))
-                } else {
-                    LazyColumn {
-                        item {
-                            OutlinedTextField(
-                                onValueChange = { query ->
-
-                                    viewModel.updateSearchQuery(query)
-                                },
-                                value = searchQuery,
-                                label = {
-                                    Text(text = "Search For Headlines")
-                                },
-                                trailingIcon = {
-                                    if (searchQuery.isNotEmpty()) {
-                                        IconButton(onClick = {
-
-                                        }) {
-                                            Icon(
-                                                Icons.Default.Search,
-                                                contentDescription = null,
-                                            )
-                                        }
-
-                                    }
-
-                                },
-
-                                modifier = Modifier
-                                    .fillMaxWidth(1f)
-                                    .padding(start = 8.dp, end = 8.dp)
-                            )
-                        }
-                        items(articles) { article ->
-                            if (article.title != "[Removed]") {
-                                TitleCard(
-                                    modifier = Modifier.padding(4.dp),
-                                    article = article,
-                                    navController = navController,
-                                    onClick = {
-                                        viewModel.updateArticleClicked(article)
-                                        navController.navigate("detail_screen")
-                                    }
+                CircularProgressIndicator(
+                    modifier = Modifier.size(48.dp),
+                    color = Color.Red,
+                    strokeWidth = 4.dp
+                )
+            }
+        } else {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Top
+            ) {
+                // Search Bar
+                OutlinedTextField(
+                    onValueChange = { query ->
+                        viewModel.updateSearchQuery(query)
+                    },
+                    value = searchQuery,
+                    label = { Text(text = "Search For Headlines") },
+                    trailingIcon = {
+                        if (searchQuery.isNotEmpty()) {
+                            IconButton(onClick = { }) {
+                                Icon(
+                                    Icons.Default.Search,
+                                    contentDescription = null
                                 )
                             }
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+
+                // Article List
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 8.dp)
+                ) {
+                    items(articles) { article ->
+                        if (article.title != "[Removed]") {
+                            TitleCard(
+                                modifier = Modifier.padding(4.dp),
+                                article = article,
+                                navController = navController,
+                                onClick = {
+                                    viewModel.updateArticleClicked(article)
+                                    navController.navigate("detail_screen")
+                                }
+                            )
                         }
                     }
                 }
             }
         }
-    )
-
+    }
 }
-
-
-

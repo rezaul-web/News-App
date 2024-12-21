@@ -9,7 +9,7 @@ data class NewsResponse(
     val totalResults: Int,
     val articles: List<Article> // Ensure this is a list of `Article`
 )
-@Entity(tableName = "article_table")
+//@Entity(tableName = "article_table")
 data class Article(
     val source: Source?,
     val author: String?, // Nullable

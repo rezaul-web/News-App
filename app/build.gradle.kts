@@ -4,8 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
-    id("androidx.room")
     id("kotlin-parcelize")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -21,6 +21,18 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += mapOf(
+                    "option_name" to "option_value",
+                    // other options...
+                )
+            }
+        }
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
     }
 
     buildTypes {
@@ -42,9 +54,7 @@ android {
     buildFeatures {
         compose = true
     }
-    room {
-        schemaDirectory("$projectDir/schemas")
-    }
+
 }
 kapt {
     correctErrorTypes = true
@@ -74,9 +84,10 @@ dependencies {
 
     implementation(libs.androidx.navigation.compose)
 
-    implementation(libs.androidx.room.runtime)
-    annotationProcessor(libs.androidx.room.compiler)
-
+    val room_version = "2.6.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
 
 
     implementation(libs.retrofit)

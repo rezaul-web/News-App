@@ -44,7 +44,7 @@ class HomeViewmodel @Inject constructor(
         getEverythingFromDateAndSorted(sortBy = sortBy.value)
     }
 
-    fun fetchNews(search:String) {
+    private fun fetchNews(search:String) {
         viewModelScope.launch {
             newsRepo.getNewsResponse(search).collect {
                 _result.value = it
