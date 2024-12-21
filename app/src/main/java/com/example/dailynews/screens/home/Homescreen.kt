@@ -20,6 +20,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,7 +41,7 @@ fun HomeScreen(
     val isLoading by viewModel.isLoading.collectAsState()
     val currentSortMethod by viewModel.sortBy.collectAsState()
     val articles = everythingFromAndSorted?.articles ?: emptyList()
-    val searchQuery by viewModel.searchQuery.collectAsState()
+    val searchQuery = remember { mutableStateOf("") }
 
     Box(
         modifier = modifier
@@ -65,14 +67,16 @@ fun HomeScreen(
             ) {
                 // Search Bar
                 OutlinedTextField(
-                    onValueChange = { query ->
-                        viewModel.updateSearchQuery(query)
+                    onValueChange = { searchQuery.value=it
+
                     },
-                    value = searchQuery,
+                    value = searchQuery.value,
                     label = { Text(text = "Search For Headlines") },
                     trailingIcon = {
-                        if (searchQuery.isNotEmpty()) {
-                            IconButton(onClick = { }) {
+                        if (searchQuery.value.isNotEmpty()) {
+                            IconButton(onClick = {
+                                viewModel.updateSearchQuery(searchQuery.value)
+                            }) {
                                 Icon(
                                     Icons.Default.Search,
                                     contentDescription = null

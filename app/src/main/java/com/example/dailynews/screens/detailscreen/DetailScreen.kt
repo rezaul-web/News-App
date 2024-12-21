@@ -71,7 +71,8 @@ fun DetailScreen(
                 article = article,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues) // Use padding from Scaffold to avoid overlap
+                    .padding(paddingValues)
+                    .padding(top = 15.dp)// Use padding from Scaffold to avoid overlap
                     .padding(horizontal = 16.dp) // Add additional horizontal padding if needed
             ) { url ->
                 openArticleLink(context, url)

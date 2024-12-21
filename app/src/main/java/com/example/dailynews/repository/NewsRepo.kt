@@ -17,9 +17,9 @@ class NewsRepo @Inject constructor(
             // Handle exceptions
         }
     }
-    fun getEverythingBasedOnFromDateAndSorted(sortedBy:String="popularity"): Flow<NewsResponse> {
+    fun getEverythingBasedOnFromDateAndSorted(sortedBy:String="popularity",organization:String="apple"): Flow<NewsResponse> {
         return flow {
-            emit(dailyNewsApi.getEverythingBasedOnFromDateAndSorted(sortBy = sortedBy))
+            emit(dailyNewsApi.getEverythingBasedOnFromDateAndSorted(sortBy = sortedBy, organization = organization))
         }.catch {
             // Handle exceptions
         }

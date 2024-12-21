@@ -21,30 +21,28 @@ class HomeViewmodel @Inject constructor(
     val result: StateFlow<NewsResponse?> = _result
     private val _everythingFromAndSorted = MutableStateFlow<NewsResponse?>(null)
     val everythingFromAndSorted: StateFlow<NewsResponse?> = _everythingFromAndSorted
-    private val _searchQuery = MutableStateFlow("")
-    val searchQuery: StateFlow<String> = _searchQuery
+    private val _searchQuery = MutableStateFlow("microsoft")
 
-  private  val _articleClicked=MutableStateFlow<Article?>(null)
-    val articleClicked=_articleClicked
+    private val _articleClicked = MutableStateFlow<Article?>(null)
+    val articleClicked = _articleClicked
     fun updateArticleClicked(article: Article) {
-        _articleClicked.value=article
+        _articleClicked.value = article
     }
 
-    // Method to update the search query
     fun updateSearchQuery(query: String) {
         _searchQuery.value = query
-        // Add logic to fetch filtered results based on query if needed
+        fetchNews(query)
+        getEverythingFromDateAndSorted(sortBy = sortBy.value, organization = query)
     }
 
     val sortBy = MutableStateFlow<String>("publishedAt")
 
     init {
-        // Fetch the headlines during ViewModel initialization
         fetchNews(_searchQuery.value)
-        getEverythingFromDateAndSorted(sortBy = sortBy.value)
+        getEverythingFromDateAndSorted(sortBy = sortBy.value, organization = _searchQuery.value)
     }
 
-    private fun fetchNews(search:String) {
+    private fun fetchNews(search: String) {
         viewModelScope.launch {
             newsRepo.getNewsResponse(search).collect {
                 _result.value = it
@@ -52,18 +50,19 @@ class HomeViewmodel @Inject constructor(
         }
     }
 
-    private fun getEverythingFromDateAndSorted(sortBy: String) {
+    private fun getEverythingFromDateAndSorted(sortBy: String, organization: String) {
         viewModelScope.launch {
-            newsRepo.getEverythingBasedOnFromDateAndSorted(sortedBy = sortBy).collect {
+            isLoading.value=true
+            newsRepo.getEverythingBasedOnFromDateAndSorted(sortedBy = sortBy, organization = organization).collect {
+                isLoading.value=false
                 _everythingFromAndSorted.value = it
+
             }
         }
     }
 
     fun updateSortedBy(s: String) {
         sortBy.value = s
-        getEverythingFromDateAndSorted(sortBy = s)
-
+        getEverythingFromDateAndSorted(sortBy = s, organization = _searchQuery.value)
     }
 }
-

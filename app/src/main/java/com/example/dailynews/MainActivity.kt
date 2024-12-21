@@ -196,7 +196,7 @@ fun SideDrawerContent(
                 .fillMaxSize()
                 .padding(top = 8.dp)
         ) {
-            items(favoriteArticles.value) { article ->
+            items(favoriteArticles.value.reversed()) { article ->
                 if (article.title != "[Removed]") {
                     TitleCard2(
                         modifier = Modifier.padding(4.dp),
