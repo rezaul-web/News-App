@@ -41,6 +41,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.dailynews.authentication.login.LogInScreen
+import com.example.dailynews.authentication.login.LogInViewModel
 import com.example.dailynews.data.DetailScreen2
 import com.example.dailynews.data.TitleCard2
 import com.example.dailynews.model.toDomain
@@ -52,6 +54,8 @@ import com.example.dailynews.ui.theme.DailyNewsTheme
 import com.example.dailynews.utils.DeleteAlertDialog
 import com.example.dailynews.viewmodels.ArticleViewModel
 import com.example.dailynews.viewmodels.HomeViewmodel
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -64,8 +68,11 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val viewModel: HomeViewmodel by viewModels()
             val articleViewmodel: ArticleViewModel by viewModels()
-
+            val logInViewModel:LogInViewModel by viewModels()
             // Track the current route for controlling the top bar visibility
+
+            val auth = Firebase.auth
+            val currentUser=auth.currentUser
             val currentRoute =
                 navController.currentBackStackEntryAsState().value?.destination?.route
 
@@ -118,7 +125,7 @@ class MainActivity : ComponentActivity() {
                     ) { innerPadding ->
                         NavHost(
                             navController = navController,
-                            startDestination = "home",
+                            startDestination = if (currentUser!=null) "home" else "login",
                             modifier = Modifier.padding(innerPadding)
                         ) {
                             // Home Screen Route
@@ -141,6 +148,12 @@ class MainActivity : ComponentActivity() {
                                 DetailScreen2(
                                     navController = navController,
                                     articleViewmodel = articleViewmodel
+                                )
+                            }
+                            composable(route="login") {
+                                LogInScreen(
+                                    viewModel = logInViewModel,
+                                    navController = navController
                                 )
                             }
                         }

@@ -2,6 +2,9 @@ package com.example.dailynews.di
 
 import com.example.dailynews.network.DailyNewsApi
 import com.example.dailynews.utils.Api
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -46,5 +49,11 @@ object NetworkModule {
     @Singleton
     fun provideDailyNewsApi(retrofit: Retrofit): DailyNewsApi {
         return retrofit.create(DailyNewsApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseAuth():FirebaseAuth{
+        return Firebase.auth
     }
 }
