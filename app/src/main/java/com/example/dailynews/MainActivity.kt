@@ -45,6 +45,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.dailynews.authentication.login.LogInScreen
 import com.example.dailynews.authentication.login.LogInViewModel
+import com.example.dailynews.authentication.signUp.SignUpScreen
+import com.example.dailynews.authentication.signUp.SignUpViewModel
 import com.example.dailynews.data.DetailScreen2
 import com.example.dailynews.data.TitleCard2
 import com.example.dailynews.model.toDomain
@@ -73,6 +75,7 @@ class MainActivity : ComponentActivity() {
             val viewModel: HomeViewmodel by viewModels()
             val articleViewmodel: ArticleViewModel by viewModels()
             val logInViewModel:LogInViewModel by viewModels()
+            val signUpViewmodel:SignUpViewModel by viewModels()
             // Track the current route for controlling the top bar visibility
 
             val auth = Firebase.auth
@@ -161,6 +164,12 @@ class MainActivity : ComponentActivity() {
                             composable(route="login") {
                                 LogInScreen(
                                     viewModel = logInViewModel,
+                                    navController = navController
+                                )
+                            }
+                            composable(route="signup") {
+                                SignUpScreen(
+                                    viewModel = signUpViewmodel,
                                     navController = navController
                                 )
                             }

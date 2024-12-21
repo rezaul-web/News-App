@@ -1,4 +1,4 @@
-package com.example.dailynews.authentication.login
+package com.example.dailynews.authentication.signUp
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
@@ -30,11 +30,12 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.dailynews.authentication.signUp.SignUpViewModel
 import com.example.dailynews.utils.UiState
 
 @Composable
-fun LogInScreen(
-    viewModel: LogInViewModel = hiltViewModel(),
+fun SignUpScreen(
+    viewModel: SignUpViewModel = hiltViewModel(),
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
@@ -80,7 +81,7 @@ fun LogInScreen(
         Button(
             onClick = {
                 // Trigger the login function in the viewModel
-                viewModel.logInWithEmailPassword(email, password)
+                viewModel.signUpWithEmailPassword(email, password)
                 val state=uiState
 
                 when (state) {
@@ -95,20 +96,21 @@ fun LogInScreen(
 
                     }
                     is UiState.Success -> {
-                       navController.navigate("home")
+                        navController.navigate("home")
                         Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
                     }
                 }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Log In")
+            Text("Sign Up")
         }
 
         TextButton(onClick = {
-            navController.navigate("signup")
+            navController.navigate("login")
+            navController.popBackStack()
         }) {
-            Text(text = "New User? Create Account")
+            Text("Already have an account? Login")
         }
 
     }
